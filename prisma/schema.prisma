@@ -1,0 +1,85 @@
+// arquivo: prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Tabela: Aluno
+model Aluno {
+  // PK: ra LONG
+  ra        BigInt    @id // LONG vira BigInt
+  // FK1: card_RFID UUID
+  card_RFID String    @unique @db.Uuid
+  cartao    Cartao    @relation(fields: [card_RFID], references: [card_RFID])
+  
+  Nome      String    @db.Text
+  Curso     String    @db.Text
+  
+  checkins  Checkin[]
+}
+
+// Tabela: cartao
+model Cartao {
+  // PK: card_RFID UUID
+  card_RFID       String    @id @default(uuid()) @db.Uuid
+  // data_expedicao DATE
+  data_expedicao  DateTime  @db.Date
+  
+  aluno           Aluno?
+}
+
+// Tabela: Palestra
+model Palestra {
+  // PK: id UUID
+  id             String     @id @default(uuid()) @db.Uuid
+  horario_inicio DateTime
+  horario_fim    DateTime
+  titulo         String     @db.Text
+  descricao      String?    @db.Text
+  
+  // NOVO CAMPO:
+  is_able_to_checkin Boolean @default(false)
+  
+  checkins       Checkin[]
+}
+
+// Tabela: Checkin
+model Checkin {
+  // PK: id UUID
+  id              String   @id @default(uuid()) @db.Uuid
+  horario_checkin DateTime @default(now())
+  
+  // FK1: aluno_ra LONG
+  aluno_ra        BigInt
+  aluno           Aluno    @relation(fields: [aluno_ra], references: [ra])
+  
+  // FK2: palestra_id UUID
+  palestra_id     String   @db.Uuid
+  palestra        Palestra @relation(fields: [palestra_id], references: [id])
+  
+  certificado     Certificado?
+  
+  // Garante que um aluno só pode fazer check-in uma vez por palestra
+  @@unique([aluno_ra, palestra_id])
+}
+
+// Tabela: certificado
+model Certificado {
+  // PK alterada para UUID
+  id                String   @id @default(uuid()) @db.Uuid // <-- LINHA CORRIGIDA
+  horario_expedicao DateTime @default(now())
+  file_blob         Bytes?   @db.ByteA
+  
+// FKs para Checkin (relação 1-para-1)
+  aluno_ra          BigInt
+  palestra_id       String   @db.Uuid
+  
+  checkin           Checkin  @relation(fields: [aluno_ra, palestra_id], references: [aluno_ra, palestra_id])
+  
+  @@unique([aluno_ra, palestra_id])
+}

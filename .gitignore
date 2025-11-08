@@ -1,0 +1,28 @@
+# Ignora a pasta de dependências do Node
+# (É gigante e pode ser recriada com 'npm install')
+node_modules/
+
+# ----------------------------------------------------
+# ARQUIVO MAIS IMPORTANTE PARA IGNORAR:
+# Contém sua senha do banco de dados!
+.env
+# ----------------------------------------------------
+
+# Arquivos de log do NPM
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+*.log
+
+# Arquivos de banco de dados locais (Boa prática, caso você use SQLite)
+*.db
+*.sqlite
+
+# Pasta de build (Se você fosse usar TypeScript)
+dist/
+
+# Configurações do VS Code
+.vscode/
