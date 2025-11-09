@@ -19,7 +19,7 @@ const prisma = new PrismaClient();
  */
 
 // Cria aluno 
-app.post('/alunos', async (req, res) => {
+app.post('/aluno', async (req, res) => {
   const { ra, nome, curso } = req.body;
   try {
     const novoAluno = await prisma.aluno.create({
