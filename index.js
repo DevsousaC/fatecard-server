@@ -44,7 +44,7 @@ app.post('/aluno', async (req, res) => {
 });
 
 // Rota para criar uma PALESTRA
-app.post('/palestras', async (req, res) => {
+app.post('/palestra', async (req, res) => {
   const { titulo, descricao, horario_inicio, horario_fim } = req.body;
   const novaPalestra = await prisma.palestra.create({
     data: {
@@ -65,7 +65,7 @@ app.post('/palestras', async (req, res) => {
 
 // Rota para LISTAR PALESTRAS (com status calculado)
 // (Mantida igual, mas lógica do status agora é híbrida)
-app.get('/palestras', async (req, res) => {
+app.get('/palestra', async (req, res) => {
   const palestras = await prisma.palestra.findMany();
   const agora = new Date();
 
@@ -87,7 +87,7 @@ app.get('/palestras', async (req, res) => {
 
 // --- NOVA ROTA: "Iniciar/Pausar Palestra" ---
 // Esta é a rota para os botões "Início" e "Pausa" da sua UI
-app.patch('/palestras/:id/toggle-checkin', async (req, res) => {
+app.patch('/palestra/:id', async (req, res) => {
   const { id } = req.params; // ID agora é UUID (String)
   const { status } = req.body; // true (para iniciar) ou false (para pausar)
 
@@ -137,7 +137,7 @@ app.post('/checkin', async (req, res) => {
 });
 
 // Rota para ver PRESENTES (quem fez check-in)
-app.get('/palestras/:id/presentes', async (req, res) => {
+app.get('/palestra/:id/presenca', async (req, res) => {
   const { id } = req.params; // ID agora é UUID (String)
   const checkins = await prisma.checkin.findMany({
     where: { palestra_id: id },
@@ -155,7 +155,7 @@ app.get('/palestras/:id/presentes', async (req, res) => {
 });
 
 // --- ROTA: "Emitir Certificados" ---
-app.post('/palestras/:id/emitir-certificados', async (req, res) => {
+app.post('/palestras/:id/certificado', async (req, res) => {
   const { id } = req.params; // ID da Palestra (UUID)
 
   try {
