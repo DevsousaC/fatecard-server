@@ -18,9 +18,9 @@ const prisma = new PrismaClient();
  * --- ROTAS DE TESTE (Atualizadas) ---
  */
 
-// Rota para criar um ALUNO (e seu cartão)
+// Cria aluno 
 app.post('/alunos', async (req, res) => {
-  const { ra, nome, curso, data_expedicao } = req.body;
+  const { ra, nome, curso } = req.body;
   try {
     const novoAluno = await prisma.aluno.create({
       data: {
@@ -30,7 +30,7 @@ app.post('/alunos', async (req, res) => {
         cartao: {
           create: {
             // card_RFID é gerado por @default(uuid())
-            data_expedicao: new Date(data_expedicao) // Deve ser formato AAAA-MM-DD
+            data_expedicao: new Date()
           }
         }
       },
